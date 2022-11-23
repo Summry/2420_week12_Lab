@@ -15,10 +15,11 @@ You will be using DigitalOcean droplets and Nginx web server to display your con
   - [**2. Set B Members**](#2-set-b-members)
   - [**3. Technologies Used**](#3-technologies-used)
   - [**4. Prerequisites**](#4-prerequisites)
-  - [**5. Tutorial**](#5-tutorial)
-    - [**Install Nginx**](#install-nginx)
+  - [**5. Installing Nginx**](#5-installing-nginx)
+  - [**Creating Files**](#creating-files)
     - [**Creating an HTML Document**](#creating-an-html-document)
     - [**Creating Nginx Server Block File**](#creating-nginx-server-block-file)
+  - [**Moving Files to your Server**](#moving-files-to-your-server)
 
 ---
 
@@ -50,9 +51,7 @@ Aaron Matthew Arcalas
 
 ---
 
-## <ins>**5. Tutorial**</ins>
-
-### <ins>**Install Nginx**</ins>
+## <ins>**5. Installing Nginx**</ins>
 
 > **Note:** You may need to open your Terminal as Administrator.
 
@@ -74,7 +73,7 @@ username@web-one:~$ sudo apt upgrade
 
 ![apt upgrade output](images/apt-upgrade.png "apt upgrade")
 
-3. To confirm changes, press `tab` and then `ENTER`:
+3. To confirm changes, press `TAB` and then `ENTER`:
 
 ![confirm changes](images/package-config.png "confirm changes")
 
@@ -86,13 +85,15 @@ username@web-one:~$ sudo apt install nginx
 
 ![apt install nginx](images/install-nginx.png "install nginx")
 
-> **Note:** If you are prompted to restart services, press `tab` and then `ENTER`.
+> **Note:** If you are prompted to restart services, press `TAB` and then `ENTER`.
 
 5. Check if `nginx` is successfully installed:
 
 ![check nginx](images/list-installed.png "list nginx")
 
 ---
+
+## <ins>**Creating Files**</ins>
 
 ### <ins>**Creating an HTML Document**</ins>
 
@@ -137,7 +138,9 @@ username@DESKTOP:/mnt/c/Users/...$ vim 137.184.13.89
 
 2. Write the following content to the file:
 
-> **IMPORTANT:** `root` directive should have your server's IP Address to it: `/var/www/<IP_ADDRESS>/html;`
+> **IMPORTANT:**  
+> 
+> `root` directive should have your server's IP Address to it: `/var/www/<IP_ADDRESS>/html;`
 > 
 > `server_name` directive should also have your server's IP Address: `<IP_ADDRESS>;`
 
@@ -157,7 +160,20 @@ server {
 }
 ```
 
-1. Check the file's content:
+3. Check the file's content:
 
-![check server block](images/server-block.png)
+![check server block](images/server-block.png "cat server block")
+
+---
+
+## <ins>**Moving Files to your Server**</ins>
+
+1. From `WSL`, connect to `web-one` via sftp.
+2. Copy the two files `index.html` and `137.184.13.89` into your home directory in `web-one`:
+
+![sftp](images/sftp.png "use sftp")
+
+3. Check the output on `web-one`:
+
+![sftp output](images/sftp-output.png "sftp output")
 
