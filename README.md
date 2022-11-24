@@ -18,8 +18,15 @@ You will be using DigitalOcean droplets and Nginx web server to display your con
   - [**5. Installing Nginx**](#5-installing-nginx)
   - [**Creating Files**](#creating-files)
     - [**Creating an HTML Document**](#creating-an-html-document)
-    - [**Creating Nginx Server Block File**](#creating-nginx-server-block-file)
+    - [**Creating Nginx Server Block**](#creating-nginx-server-block)
   - [**Moving Files to your Server**](#moving-files-to-your-server)
+  - [**Moving and Configuring Files**](#moving-and-configuring-files)
+    - [**Moving HTML Document**](#moving-html-document)
+    - [**Moving and Configuring Server Block**](#moving-and-configuring-server-block)
+  - [**Checking the Application**](#checking-the-application)
+  - [**Adding a Cloud Firewall**](#adding-a-cloud-firewall)
+  - [**Conclusion**](#conclusion)
+- [**Go to top**](#go-to-top)
 
 ---
 
@@ -126,33 +133,29 @@ username@DESKTOP:/mnt/c/Users/...$ vim index.html
 
 ---
 
-### <ins>**Creating Nginx Server Block File**</ins>
+### <ins>**Creating Nginx Server Block**</ins>
 
 The server block file is used to serve your HTML document that you created from [**Creating an HTML Document**](#creating-an-html-document).
 
 1. Within `WSL`, create a text file with your DO droplet's IP Address as the name:
 
 ```
-username@DESKTOP:/mnt/c/Users/...$ vim 137.184.13.89
+username@DESKTOP:/mnt/c/Users/...$ vim <IP_ADDRESS>
 ```
 
 2. Write the following content to the file:
 
-> **IMPORTANT:**  
-> 
-> `root` directive should have your server's IP Address to it: `/var/www/<IP_ADDRESS>/html;`
-> 
-> `server_name` directive should also have your server's IP Address: `<IP_ADDRESS>;`
+> **IMPORTANT:** `<IP_ADDRESS>` should be your server's IP Address. (E.g., 137.184.15.57)
 
 ```
 server {
         listen 80;
         listen [::]:80;
 
-        root /var/www/137.184.13.89/html;
+        root /var/www/<IP_ADDRESS>/html;
         index index.html;
 
-        server_name 137.184.13.89;
+        server_name <IP_ADDRESS>;
 
         location / {
                 try_files $uri $uri/ =404;
@@ -160,7 +163,7 @@ server {
 }
 ```
 
-3. Check the file's content:
+1. Check the file's content:
 
 ![check server block](images/server-block.png "cat server block")
 
@@ -169,7 +172,7 @@ server {
 ## <ins>**Moving Files to your Server**</ins>
 
 1. From `WSL`, connect to `web-one` via sftp.
-2. Copy the two files `index.html` and `137.184.13.89` into your home directory in `web-one`:
+2. Copy the two files `index.html` and `<IP_ADDRESS>` into your home directory in `web-one`:
 
 ![sftp](images/sftp.png "use sftp")
 
@@ -177,3 +180,110 @@ server {
 
 ![sftp output](images/sftp-output.png "sftp output")
 
+---
+
+## <ins>**Moving and Configuring Files**
+
+### <ins>**Moving HTML Document**</ins>
+
+1. In `web-one`, make a new directory for `index.html`:
+
+```
+username@web-one:~$ sudo mkdir -p /var/www/<IP_ADDRESS>/html
+```
+
+2. Move `index.html` to the newly-created directory:
+
+```
+username@web-one:~$ sudo mv ~/index.html /vaw/www/<IP_ADDRESS>/html/
+```
+
+3. Check if file has been moved:
+
+```
+username@web-one:~$ ls /var/www/<IP_ADDRESS>/html/index.html
+```
+
+---
+
+### <ins>**Moving and Configuring Server Block**</ins>
+
+1. In `web-one`, move `<IP_ADDRESS>` to the nginx sites available directory:
+
+```
+username@web-one:~$ sudo mv ~/<IP_ADDRESS> /etc/nginx/sites-available/
+```
+
+2. Check if file has been moved:
+
+```
+username@web-one:~$ ls /etc/nginx/sites-available/
+```
+
+3. Create a symbolic link and test your configuration:
+
+```
+username@web-one:~$ sudo ln -s /etc/nginx/sites-available/<IP_ADDRESS> /etc/nginx/sites-enabled/
+username@web-one:~$ sudo nginx -t
+```
+
+Desired Output:  
+![test config output](images/test-config.png "test nginx config")
+
+4. Check if the link is green:
+
+```
+username@web-one:~$ ls -l /etc/nginx/sites-enabled/
+```
+
+Desired Output:  
+![sites enabled](images/sites-enabled.png "sites enabled")
+
+5. Reload `nginx`:
+
+```
+username@web-one:~$ sudo systemctl reload nginx
+```
+
+---
+
+## <ins>**Checking the Application**</ins>
+
+- Check if your HTML document is being served by visiting your server's IP Address on your browser.
+
+Example output:  
+![browser output](images/browser.png "browser output")
+
+## <ins>**Adding a Cloud Firewall**</ins>
+
+For this step, you will be using DO to create a Cloud Firewall for your application.
+
+1. Click the green `Create` dropdown button and click `Cloud Firewalls`:
+
+![create firewall](images/create.png "create firewall")
+
+2. Enter a `name`, and allow incoming `HTTP` and `SSH` connections:
+
+![fill up form](images/create-firewall.png "fill up form")
+
+3. Apply the firewall to your server and create the firewall:
+
+![apply firewall](images/apply.png "apply firewall")
+
+4. Check if the firewall has been successfully created:
+
+![firewall](images/firewall.png "firewall")
+
+---
+
+## <ins>**Conclusion**</ins>
+
+Good job. You have successfully created your own web server with a firewall using DigitalOcean.
+
+You can send your server's IP Address to your friends and they'll be able to view your application.
+
+Since you allowed incoming SSH connections, you are the only one who can connect via SSH to your application.
+
+---
+
+# [<ins>**Go to top**</ins>](#2420-week-12-lab)
