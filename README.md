@@ -106,11 +106,13 @@ username@web-one:~$ sudo apt install nginx
 
 Within `WSL`, you will create an HTML file in a logical directory. You will be sending this file to `web-one`, eventually.
 
-1. Create an `index.html` file with the following content:
+1. Create an `index.html` file with your own content:
 
 ```
 username@DESKTOP:/mnt/c/Users/...$ vim index.html
 ```
+
+- For example:
 
 ```
 <!DOCTYPE html>
@@ -118,16 +120,16 @@ username@DESKTOP:/mnt/c/Users/...$ vim index.html
 <html>
     <head>
     <meta charset="UTF-8" />
-        <title>Example Site for 2420</title>
+        <title>This is my website!</title>
     </head>
     <body>
-        <h1>Success!</h1>
-        <h2 style="color: red;">All your internets are belong to us!</h2>
+        <h1>Success! The application has been created!</h1>
+        <h2 style="color: red;">This is a heading 2 and it is red!</h2>
     </body>
 </html>
 ```
 
-2. Check the file's content:
+1. Check the file's content:
 
 ![check index html](images/index-html.png "cat index html")
 
@@ -228,6 +230,7 @@ username@web-one:~$ sudo nginx -t
 ```
 
 Desired Output:  
+
 ![test config output](images/test-config.png "test nginx config")
 
 4. Check if the link is green:
@@ -237,6 +240,7 @@ username@web-one:~$ ls -l /etc/nginx/sites-enabled/
 ```
 
 Desired Output:  
+
 ![sites enabled](images/sites-enabled.png "sites enabled")
 
 5. Reload `nginx`:
@@ -252,6 +256,7 @@ username@web-one:~$ sudo systemctl reload nginx
 - Check if your HTML document is being served by visiting your server's IP Address on your browser.
 
 Example output:  
+
 ![browser output](images/browser.png "browser output")
 
 ## <ins>**Adding a Cloud Firewall**</ins>
